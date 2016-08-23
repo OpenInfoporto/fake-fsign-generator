@@ -33,13 +33,13 @@ def create_app(configfile=None):
     def result():
         data = request.form['companyName']
         
-        g = FCodeGenerator(image_size=50, image_border=4, density=100)
+        g = FCodeGenerator(image_size=50, image_border=4, density=200)
         filepath = 'test.png'
         image = g.make()
         image.save(filepath)
         img = Image.open(filepath).resize((500,500))
         img.save(filepath)
-        g.merge_pictures(filepath, "finger.png", "static\out.png")
+        g.merge_pictures(filepath, "finger.png", "static/out.png")
             
         return render_template('result.html')
 
