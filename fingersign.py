@@ -8,7 +8,7 @@ from wtforms import TextField, HiddenField, ValidationError, RadioField,\
 from wtforms.validators import Required
 from generator import FCodeGenerator
 from PIL import Image, ImageDraw
-import random
+import random, time
 
 # straight from the wtforms docs:
 class GenerationForm(Form):
@@ -33,17 +33,19 @@ def create_app(configfile=None):
     def result():
         data = request.form['companyName']
         
-        g = FCodeGenerator(image_size=50, image_border=4, density=200)
+        fileName = "static/results/"+str(int(time.time()))+".png"
+        
+        g = FCodeGenerator(image_size=50, image_border=4, density=100)
         filepath = 'test.png'
         image = g.make()
         image.save(filepath)
         img = Image.open(filepath).resize((500,500))
         img.save(filepath)
-        g.merge_pictures(filepath, "finger.png", "static/out.png")
+        g.merge_pictures(filepath, "finger.png", fileName)
             
-        return render_template('result.html')
+        return render_template('result.html', fileName = fileName)
 
     return app
 
 if __name__ == '__main__':
-    create_app().run(debug=True)
+    create_app().run(host='0.0.0.0',port=5001,debug=True)
